@@ -17,6 +17,9 @@ class CrimeDetailViewModel(crimeId: UUID) : ViewModel() {
     private val _crime = MutableStateFlow<CrimeDisplayable?>(null)
     val crime = _crime.asStateFlow()
 
+    private val _number = MutableStateFlow("")
+    val number = _number.asStateFlow()
+
     init {
         viewModelScope.launch {
             onIdPassed(crimeId)
@@ -27,12 +30,19 @@ class CrimeDetailViewModel(crimeId: UUID) : ViewModel() {
         _crime.value = CrimeDisplayable(crimeRepository.getCrime(crimeId))
     }
 
-    fun updateCrime(onUpdate: (CrimeDisplayable)->CrimeDisplayable){
-        _crime.update { oldCrime->
+    fun updateCrime(onUpdate: (CrimeDisplayable) -> CrimeDisplayable) {
+        _crime.update { oldCrime ->
             oldCrime?.let { oldCrimeNotNull -> onUpdate(oldCrimeNotNull) }
         }
+
     }
-     private fun updateToLocal(crime:CrimeDisplayable){
+
+    fun updateNumber(newNumber: String) {
+        _number.update { newNumber }
+    }
+
+
+    private fun updateToLocal(crime: CrimeDisplayable) {
         crimeRepository.updateToLocal(crime.toCrimeDomain())
     }
 

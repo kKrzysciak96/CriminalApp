@@ -1,9 +1,6 @@
 package com.example.criminalapp.features.crime.data.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.example.criminalapp.features.crime.data.model.CrimeCached
 import com.example.criminalapp.features.crime.presentation.model.CrimeDisplayable
 import kotlinx.coroutines.flow.Flow
@@ -23,5 +20,7 @@ interface CrimeDao {
 
     @Insert
     suspend fun saveToLocal(crime: CrimeCached)
+    @Delete
+    suspend fun deleteCrime(crime: CrimeCached)
 
 }

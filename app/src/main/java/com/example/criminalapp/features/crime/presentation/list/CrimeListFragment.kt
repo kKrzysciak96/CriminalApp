@@ -2,7 +2,6 @@ package com.example.criminalapp.features.crime.presentation.list
 
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -24,10 +23,8 @@ class CrimeListFragment : Fragment(), MenuProvider {
         get() = checkNotNull(_binding) { "Binding is not initialized" }
     private val viewModel by viewModels<CrimeListViewModel>()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -50,12 +47,12 @@ class CrimeListFragment : Fragment(), MenuProvider {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.crimes.collect { crimes ->
-                    binding.crimeRecyclerView.adapter =
-                        CrimeAdapter(crimeList = crimes, onCrimeClick = onCrimeClick)
+                    updateUi(crimes,onCrimeClick)
                 }
             }
         }
         activity?.addMenuProvider(this, viewLifecycleOwner)
+
     }
 
     override fun onDestroyView() {
@@ -89,5 +86,21 @@ class CrimeListFragment : Fragment(), MenuProvider {
                 newCrime.id
             )
         )
+    }
+
+    private fun updateUi(crimes : List<CrimeDisplayable>, onCrimeClick:(UUID)->Unit){
+        binding.crimeRecyclerView.adapter =
+            CrimeAdapter(crimeList = crimes, onCrimeClick = onCrimeClick)
+
+        binding.addCrimeButton.apply {
+            if (viewModel.crimes.value.isEmpty()) {
+                visibility = View.VISIBLE
+                setOnClickListener {
+                    showNewCrime()
+                }
+            } else {
+                visibility = View.GONE
+            }
+        }
     }
 }

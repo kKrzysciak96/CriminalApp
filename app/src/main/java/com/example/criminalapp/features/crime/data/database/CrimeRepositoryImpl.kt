@@ -23,7 +23,8 @@ class CrimeRepositoryImpl(context: Context, private val scope: CoroutineScope) :
         CrimeDataBase::class.java,
         DATABASE_NAME
     )
-        .createFromAsset(DATABASE_NAME)
+//        .createFromAsset(DATABASE_NAME)
+        .addMigrations(migration_1_2, migration_2_3)
         .build()
 
     companion object {
@@ -56,7 +57,11 @@ class CrimeRepositoryImpl(context: Context, private val scope: CoroutineScope) :
     }
 
     override suspend fun saveToLocal(crime: CrimeDomain) {
-        dataBase.provideDao().saveToLocal(CrimeCached(crime))
+        withContext(Dispatchers.IO) { dataBase.provideDao().saveToLocal(CrimeCached(crime)) }
+    }
+
+    override suspend fun deleteCrime(crime: CrimeDomain) {
+        withContext(Dispatchers.IO) { dataBase.provideDao().deleteCrime(CrimeCached(crime)) }
     }
 
 }
