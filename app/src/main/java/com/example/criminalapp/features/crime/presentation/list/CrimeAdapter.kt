@@ -9,7 +9,7 @@ import com.example.criminalapp.databinding.CrimeItemBinding
 import com.example.criminalapp.features.crime.presentation.model.CrimeDisplayable
 import java.util.*
 
-class CrimeAdapter(private val crimeList: List<CrimeDisplayable>, private val onCrimeClick: (UUID)->Unit) :
+class CrimeAdapter(private val crimeList: List<CrimeDisplayable>, private val onCrimeClick: (UUID)->Unit,private val onLongCrimeClick: (UUID)->Unit) :
     RecyclerView.Adapter<CrimeAdapter.CrimeViewHolder>() {
 
     inner class CrimeViewHolder(private val binding: CrimeItemBinding) : ViewHolder(binding.root) {
@@ -23,6 +23,11 @@ class CrimeAdapter(private val crimeList: List<CrimeDisplayable>, private val on
                     onCrimeClick(crime.id)
 
                 }
+                root.setOnLongClickListener {
+                    onLongCrimeClick(crime.id)
+                    true
+                }
+
             }
         }
     }

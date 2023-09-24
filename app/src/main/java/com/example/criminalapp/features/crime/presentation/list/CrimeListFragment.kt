@@ -2,6 +2,7 @@ package com.example.criminalapp.features.crime.presentation.list
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -43,11 +44,16 @@ class CrimeListFragment : Fragment(), MenuProvider {
                 )
             )
         }
+        val onLongCrimeClick = { id: UUID ->
+            viewModel.deleteCrime(id)
+            Toast.makeText(requireContext(), "Crime successfully deleted", Toast.LENGTH_SHORT)
+                .show()
+        }
         super.onViewCreated(view, savedInstanceState)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.crimes.collect { crimes ->
-                    updateUi(crimes,onCrimeClick)
+                    updateUi(crimes, onCrimeClick, onLongCrimeClick)
                 }
             }
         }
@@ -88,9 +94,17 @@ class CrimeListFragment : Fragment(), MenuProvider {
         )
     }
 
-    private fun updateUi(crimes : List<CrimeDisplayable>, onCrimeClick:(UUID)->Unit){
+    private fun updateUi(
+        crimes: List<CrimeDisplayable>,
+        onCrimeClick: (UUID) -> Unit,
+        onLongCrimeClick: (UUID) -> Unit
+    ) {
         binding.crimeRecyclerView.adapter =
-            CrimeAdapter(crimeList = crimes, onCrimeClick = onCrimeClick)
+            CrimeAdapter(
+                crimeList = crimes,
+                onCrimeClick = onCrimeClick,
+                onLongCrimeClick = onLongCrimeClick
+            )
 
         binding.addCrimeButton.apply {
             if (viewModel.crimes.value.isEmpty()) {

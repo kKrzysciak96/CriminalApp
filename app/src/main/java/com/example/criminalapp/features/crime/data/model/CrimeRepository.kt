@@ -15,6 +15,6 @@ interface CrimeRepository {
 
     suspend fun saveToLocal(crime: CrimeDomain)
 
-    suspend fun deleteCrime(crime: CrimeDomain)
+    suspend fun deleteCrime(crimeId: UUID)
 
 }

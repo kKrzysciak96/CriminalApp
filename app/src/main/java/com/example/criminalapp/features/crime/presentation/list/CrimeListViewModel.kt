@@ -7,6 +7,7 @@ import com.example.criminalapp.features.crime.data.model.CrimeRepository
 import com.example.criminalapp.features.crime.presentation.model.CrimeDisplayable
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 class CrimeListViewModel : ViewModel() {
     private val crimeRepository: CrimeRepository = CrimeRepositoryImpl.get()
@@ -31,8 +32,8 @@ class CrimeListViewModel : ViewModel() {
         }
     }
 
-    private fun deleteCrime(crime: CrimeDisplayable) {
-        viewModelScope.launch { crimeRepository.deleteCrime(crime.toCrimeDomain()) }
+     fun deleteCrime(crimeId: UUID) {
+        viewModelScope.launch { crimeRepository.deleteCrime(crimeId) }
     }
 
     override fun onCleared() {

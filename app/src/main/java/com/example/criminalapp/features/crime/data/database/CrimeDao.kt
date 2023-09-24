@@ -20,7 +20,7 @@ interface CrimeDao {
 
     @Insert
     suspend fun saveToLocal(crime: CrimeCached)
-    @Delete
-    suspend fun deleteCrime(crime: CrimeCached)
+    @Query("DELETE  FROM crime WHERE id= (:crimeId)")
+    suspend fun deleteCrime(crimeId: UUID)
 
 }

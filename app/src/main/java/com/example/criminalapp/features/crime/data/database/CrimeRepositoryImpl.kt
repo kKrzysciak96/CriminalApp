@@ -60,8 +60,8 @@ class CrimeRepositoryImpl(context: Context, private val scope: CoroutineScope) :
         withContext(Dispatchers.IO) { dataBase.provideDao().saveToLocal(CrimeCached(crime)) }
     }
 
-    override suspend fun deleteCrime(crime: CrimeDomain) {
-        withContext(Dispatchers.IO) { dataBase.provideDao().deleteCrime(CrimeCached(crime)) }
+    override suspend fun deleteCrime(crimeId: UUID) {
+        withContext(Dispatchers.IO) { dataBase.provideDao().deleteCrime(crimeId) }
     }
 
 }
